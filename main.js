@@ -3,7 +3,7 @@ let yourInfo = document.querySelector(".your-info");
 let infoCountry = document.querySelector(".info-country");
 let listNeighbors = document.querySelector(".list");
 
-let borders;
+let borders = [];
 
 //render for your-info
 const renderYourIP = function (result) {
@@ -50,6 +50,9 @@ function getIP() {
       renderInfoCountry(result);
       if (result[0].borders.length > 0) {
         borders = result[0].borders;
+        if (borders.indexOf("ISR") > -1) {
+          borders.splice(borders.indexOf("ISR"), 1);
+        }
       } else {
         listNeighbors.innerHTML = "There is no neighbor for this country";
       }
@@ -74,18 +77,3 @@ function getIP() {
 }
 
 getIP();
-
-document.addEventListener("click", function (e) {
-  if (e.target.id === "myIP") {
-    let ipValue = e.target.innerHTML;
-    navigator.clipboard.writeText(e.target.innerHTML);
-    e.target.style.color = "#9e0f0f";
-    e.target.style.fontSize = "50px";
-    e.target.innerHTML = "Copied!";
-    setTimeout(function () {
-      e.target.style.color = "#646464";
-      e.target.innerHTML = ipValue;
-      e.target.style.fontSize = "40px";
-    }, 250);
-  }
-});
