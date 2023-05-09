@@ -2,6 +2,7 @@ let container = document.querySelector(".container");
 let yourInfo = document.querySelector(".your-info");
 let infoCountry = document.querySelector(".info-country");
 let listNeighbors = document.querySelector(".list");
+let erroR = document.querySelector(".error");
 
 let borders = [];
 
@@ -37,7 +38,12 @@ function getIP() {
   fetch(
     "https://api.geoapify.com/v1/ipinfo?&apiKey=677f2c8db3534f2cae4c870925acac9f"
   )
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`${response.status} Error to get IP API`);
+      }
+      return response.json();
+    })
     .then((result) => {
       renderYourIP(result);
       //new fetch to get info about the country
@@ -45,35 +51,66 @@ function getIP() {
         `https://restcountries.com/v3.1/name/${result.country.name}`
       );
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`${response.status} Error to get Country API`);
+      }
+      return response.json();
+    })
     .then((result) => {
       renderInfoCountry(result);
       if (result[0].borders.length > 0) {
         borders = result[0].borders;
-        if (borders.indexOf("ISR") > -1) {
-          borders.splice(borders.indexOf("ISR"), 1);
-        }
       } else {
         listNeighbors.innerHTML = "There is no neighbor for this country";
       }
     })
     .then(function () {
-      if (borders) {
+      if (borders !== []) {
         for (const border of borders) {
           listNeighbors.innerHTML = "";
           const nei = fetch(`https://restcountries.com/v3.1/alpha/${border}`)
-            .then((response) => response.json())
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  `${response.status} Error to get neighbors API`
+                );
+                return;
+              }
+              return response.json();
+            })
+            .catch(
+              (err) =>
+                (erroR.innerHTML = `Somthing Not exptected happened : ${err}`)
+            )
             .then((result) => {
-              console.log(result);
               let data = `<span>${result[0].flag} ${result[0].name.common} </span>`;
               listNeighbors.innerHTML += data;
             });
         }
       }
     })
+    .catch(
+      (err) => (erroR.innerHTML = `Somthing Not exptected happened : ${err}`)
+    )
     .finally(() => {
       container.style.opacity = 1;
     });
 }
 
 getIP();
+
+document.addEventListener("click", function (e) {
+  if (e.target.id === "myIP") {
+    let ipValue = e.target.innerHTML;
+    navigator.clipboard.writeText(e.target.innerHTML);
+    e.target.style.color = "#9e0f0f";
+    e.target.style.fontSize = "50px";
+    e.target.innerHTML = "Copied!";
+    setTimeout(function () {
+      e.target.style.color = "#646464";
+      e.target.innerHTML = ipValue;
+      e.target.style.fontSize = "40px";
+    }, 250);
+  }
+});
