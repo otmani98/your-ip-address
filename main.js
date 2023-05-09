@@ -11,7 +11,7 @@ const renderYourIP = function (result) {
   let data = `
   <h2>My IPv4 Address</h2>
   <span class="ip" id="myIP">${result.ip}</span>
-  <p>Your Location</p>
+  <p>My Location</p>
   <span class="location">${result.country.name}, ${result.city.name} ${result.country.flag}</span>
   <p class="test"></p>
 `;
