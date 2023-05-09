@@ -38,14 +38,7 @@ html {
   }
 }
 /* END Global Rules */
-/* Start Variables */
-:root {
-  --main-color: #332f33;
-  --main2-color: #2761b9;
-  --main3-color: #103e83;
-  --main4-color: #8d0d0d;
-}
-/* END Variables */
+
 
 h1 {
   margin: 15px auto;
@@ -84,12 +77,6 @@ h2 {
   transition: 0.3s;
   cursor: pointer;
 }
-
-/* .ip:hover,
-.ip:active {
-  font-size: 42px;
-  color: #9e0f0f;
-} */
 
 p {
   text-align: center;
@@ -206,6 +193,13 @@ button:hover {
   background: #ddd;
   margin: 5px;
   border-radius: 15px;
+}
+
+.error {
+  text-align: center;
+  font-weight: bold;
+  color: #8d0d0d;
+  font-size: 25px;
 }
 
 @media (max-width: 993px) {
